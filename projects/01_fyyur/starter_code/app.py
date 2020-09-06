@@ -45,6 +45,7 @@ class Venue(db.Model):
     facebook_link = db.Column(db.String(120))
     seeking_talent = db.Column(db.Boolean)
     seeking_description = db.Column(db.String(400))
+    Show = db.relationship('Show', backref='Venue', lazy=True)
 
     def __repr__(self):
         return f'<Venue{self.id} {self.name}>'
@@ -67,14 +68,25 @@ class Artist(db.Model):
     facebook_link = db.Column(db.String(120))
     seeking_venue = db.Column(db.Boolean)
     seeking_description = db.Column(db.String(400))
+    Show = db.relationship('Show', backref='Artist', lazy=True)
 
 
-    def __repr__(self):
-        return f'<Artist{self.id} {self.name}>'
+def __repr__(self):
+    return f'<Artist{self.id} {self.name}>'
 
-    # TODO: implement any missing fields, as a database migration using Flask-Migrate
+    # TODO: implement any missing fields, as a database migration using Flask-Migrate Done
 
-# TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
+
+class Show(db.Model):
+    __tablename = 'Show'
+    id = db.Column(db.Integer, primary_key=True)
+    start_time = db.Column(db.DateTime, nullable=False)
+    artist_id = db.Column(db.Integer, db.ForeignKey('Artist.id'), nullable=False)
+    venue_id = db.Column(db.Integer, db.ForeignKey('Venue.id'), nullable=False)
+
+def __repr__(self):
+    return f'<Show{self.id} , Artist{self.artist_id} , Venue{self.venue_id}>'
+# TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.Done
 
 
 
