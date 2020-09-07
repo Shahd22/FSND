@@ -24,7 +24,9 @@ db = SQLAlchemy(app)
 
 migrate = Migrate(app, db)
 
-# TODO: connect to a local postgresql database Done
+
+
+# TODO: [Done] connect to a local postgresql database
 
 #----------------------------------------------------------------------------#
 # Models.
@@ -33,7 +35,7 @@ migrate = Migrate(app, db)
 class Venue(db.Model):
     __tablename__ = 'Venue'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String, nullable=False)
     genres = db.Column(db.String)
     city = db.Column(db.String(120), nullable=False)
@@ -52,12 +54,12 @@ class Venue(db.Model):
 
 
 
-    # TODO: implement any missing fields, as a database migration using Flask-Migrate
+    # TODO: [Done] implement any missing fields, as a database migration using Flask-Migrate
 
 class Artist(db.Model):
     __tablename__ = 'Artist'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String, nullable=False)
     city = db.Column(db.String(120), nullable=False)
     state = db.Column(db.String(120), nullable=False)
@@ -74,7 +76,7 @@ class Artist(db.Model):
 def __repr__(self):
     return f'<Artist{self.id} {self.name}>'
 
-    # TODO: implement any missing fields, as a database migration using Flask-Migrate Done
+    # TODO: [Done] implement any missing fields, as a database migration using Flask-Migrate Done
 
 
 class Show(db.Model):
@@ -86,7 +88,8 @@ class Show(db.Model):
 
 def __repr__(self):
     return f'<Show{self.id} , Artist{self.artist_id} , Venue{self.venue_id}>'
-# TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.Done
+
+# TODO [Done] Implement Show and Artist models, and complete all model relationships and properties, as a database migration.Done
 
 
 
@@ -119,7 +122,16 @@ def index():
 @app.route('/venues')
 def venues():
   # TODO: replace with real venues data.
-  #       num_shows should be aggregated based on number of upcoming shows per venue.
+  #      num_shows should be aggregated based on number of upcoming shows per venue.
+
+
+  data = []
+
+  result = Venue.query.filter(Venue.city, Venue.state).all
+  venues = Venue.query.all()
+  print (result)
+
+
   data=[{
     "city": "San Francisco",
     "state": "CA",
