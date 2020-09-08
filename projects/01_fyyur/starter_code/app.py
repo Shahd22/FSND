@@ -59,7 +59,7 @@ class Venue(db.Model):
 class Artist(db.Model):
     __tablename__ = 'Artist'
 
-    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True,primary_key=True)
     name = db.Column(db.String, nullable=False)
     city = db.Column(db.String(120), nullable=False)
     state = db.Column(db.String(120), nullable=False)
@@ -121,18 +121,43 @@ def index():
 
 @app.route('/venues')
 def venues():
-  # TODO: replace with real venues data.
+  # TODO: [Done]replace with real venues data.
   #      num_shows should be aggregated based on number of upcoming shows per venue.
-
 
   data = []
 
-  result = Venue.query.filter(Venue.city, Venue.state).all
   venues = Venue.query.all()
-  print (result)
+
+  #venues = session.query(Venue).all
+  venues_location = Venue.query.with_entities(Venue.city, Venue.state)
+
+  for location in venues_location:
+      Data.append({
+      "city": location[0],
+      "state": location[1],
+      "venues": []
+      })
+
+  for venue in venues:
+      number_upcoming_shows = 0
+
+      shows = Show.query.filter_by(venue_id=venue.id).all
 
 
-  data=[{
+
+      for show in shows:
+          if show.start_time > datetime.now():
+              number_upcoming_shows += 1
+
+      for venue_location_list in data:
+         if venue.state == venue_location_list['state'] and venue.city == location['city']:
+        venue_location_list['venues'].append({
+        "id": venue.id,
+        "name": venue.name,
+        "num_upcoming_shows": number_upcoming_shows
+        })
+
+  """data=[{
     "city": "San Francisco",
     "state": "CA",
     "venues": [{
@@ -153,6 +178,7 @@ def venues():
       "num_upcoming_shows": 0,
     }]
   }]
+  """
   return render_template('pages/venues.html', areas=data);
 
 @app.route('/venues/search', methods=['POST'])
