@@ -133,7 +133,7 @@ def venues():
   venues_location = Venue.query.with_entities(Venue.city, Venue.state)
 
   for location in venues_location:
-      Data.append({
+      data.append({
       "city": location[0],
       "state": location[1],
       "venues": []
@@ -316,18 +316,29 @@ def delete_venue(venue_id):
   finally:
       db.session.close()
 
-
-
   # BONUS CHALLENGE: Implement a button to delete a Venue on a Venue Page, have it so that
   # clicking that button delete it from the db then redirect the user to the homepage
-  #return None
+  return redirect(url_for('index'))
 
 #  Artists
 #  ----------------------------------------------------------------
 @app.route('/artists')
 def artists():
-  # TODO: replace with real data returned from querying the database
-  data=[{
+  # TODO:[Done]replace with real data returned from querying the database
+  data = []
+
+  artist_names = Artist.query.with_entities(Artist.id, Artist.name)
+
+
+  for artist in artist_names:
+      data.append({
+      "id": artist.id,
+      "name": artist.name,
+
+      })
+
+
+  """data=[{
     "id": 4,
     "name": "Guns N Petals",
   }, {
@@ -336,7 +347,8 @@ def artists():
   }, {
     "id": 6,
     "name": "The Wild Sax Band",
-  }]
+  }]"""
+
   return render_template('pages/artists.html', artists=data)
 
 @app.route('/artists/search', methods=['POST'])
@@ -344,6 +356,7 @@ def search_artists():
   # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
   # seach for "A" should return "Guns N Petals", "Matt Quevado", and "The Wild Sax Band".
   # search for "band" should return "The Wild Sax Band".
+
   response={
     "count": 1,
     "data": [{
